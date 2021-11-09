@@ -1,6 +1,6 @@
 # csit214
 
-## Members: Thanh Pham (please add your name as a member here, separate by comma)
+## Members: Thanh Pham, Daniel Garvey
 ## Project Name:
 ## Project description:
 ## Project structure:
