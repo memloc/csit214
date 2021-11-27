@@ -13,7 +13,7 @@ set(SOURCES
 )
 
 set(HEADERS
-	# "${HEADER_DIR}/example.h"
+	"${HEADER_DIR}/Token.h"
 )
 
 # add the executable
