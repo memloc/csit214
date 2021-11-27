@@ -16,6 +16,7 @@ set(HEADERS
 	"${HEADER_DIR}/Token.h"
 	"${HEADER_DIR}/Bytecode.h"
 	"${HEADER_DIR}/Compiler.h"
+	"${HEADER_DIR}/VirtualMachine.h"
 )
 
 # add the executable
