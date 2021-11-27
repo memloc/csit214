@@ -14,6 +14,8 @@ set(SOURCES
 
 set(HEADERS
 	"${HEADER_DIR}/Token.h"
+	"${HEADER_DIR}/Bytecode.h"
+	"${HEADER_DIR}/Compiler.h"
 )
 
 # add the executable
