@@ -10,7 +10,10 @@ namespace Parser {
   enum TokenType {
     DELIMITER,
     IDENTIFIER,
-    LITERAL,
+    STRING_LITERAL,
+    INTEGER_LITERAL,
+    PAREN_LEFT,
+    PAREN_RIGHT,
     OPERATOR,
     COMMENT,
   }; 

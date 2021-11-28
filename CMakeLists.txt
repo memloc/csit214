@@ -10,6 +10,7 @@ set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 # project source files
 set(SOURCES 
 	"${SOURCE_DIR}/main.cpp"
+	"${SOURCE_DIR}/Compiler.cpp"
 )
 
 set(HEADERS

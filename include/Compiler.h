@@ -22,7 +22,7 @@ namespace Compiler {
     };
 
     // produces a token from input source code
-    Parser::Token lex(string&);
+    Parser::Token lex(string&, int&);
 
     // produce the token stream
     vector<Parser::Token>* parse(string&);
