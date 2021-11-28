@@ -4,7 +4,7 @@ using namespace std;
 using namespace Parser;
 using namespace Compiler;
 
-Token lex(string& sourceCode, int& index) {
+Token Compiler::lex(string& sourceCode, int& index) {
     Token token;
 
     for (;index < sourceCode.length(); index++)
@@ -110,10 +110,11 @@ Token lex(string& sourceCode, int& index) {
 
                 }
         }
+	return token;
 }
 
 
-vector<Token>* parse(vector<Token>& tokenStream) {
+vector<Token>* Compiler::parse(vector<Token>& tokenStream) {
     vector<Token>* statement;
 
     // iterate through each token creating statements, and checking syntax
@@ -145,7 +146,7 @@ vector<Token>* parse(vector<Token>& tokenStream) {
 }
 
 // translate tokens from the token stream into instructions in bytecode representation
-Bytecode::Instruction translate(vector<Token>& statementStream) {
+Bytecode::Instruction Compiler::translate(vector<Token>& statementStream) {
     Bytecode::Instruction instruction;
 
     // create an instruction from one or more tokens
@@ -154,7 +155,7 @@ Bytecode::Instruction translate(vector<Token>& statementStream) {
 }
 
 // performs lexing, parsing, and translation into the bytecode representation of the program
-vector<Bytecode::Instruction>* compile(string& sourceCode) {
+vector<Bytecode::Instruction>* Compiler::compile(string& sourceCode) {
     vector<Token> tokens;
 
     // tokenize the input source code  
