@@ -6,11 +6,11 @@ using namespace std;
 
 #define MAX_PROGRAM_SIZE 1024
 
-void extractFileContents(ifstream&, string&);
+string extractFileContents(ifstream&);
 
 int main(int argc, char* argv[]) {
 	if (argc < 2) {
-		cout << "Missing filename\n";
+		cout << "Missing file name\n";
 		exit(1);
 	}
 
@@ -23,8 +23,7 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 
-	string sourceCode;
-	extractFileContents(fileStream, sourceCode);
+	string sourceCode = extractFileContents(fileStream);
 	fileStream.close();
 
 	cout << sourceCode << endl;
@@ -33,18 +32,19 @@ int main(int argc, char* argv[]) {
 }
 
 // extract the contents of file to a string, fail if the file exceeds max size
-void extractFileContents(ifstream& fileStream, string& fileContents) {
+string extractFileContents(ifstream& fileStream) {
 	char contents[MAX_PROGRAM_SIZE];
-	
+
 	size_t size = 0;
 	while (!fileStream.eof()) {
 		fileStream.get(contents[size++]);
 
 		if (size == MAX_PROGRAM_SIZE) {
 			cout << "File exceeds the maximum size\n";
+			fileStream.close();
 			exit(1);
 		}
 	}
 
-	fileContents.append((const char*)contents);
+	return (const char*)contents;
 }
