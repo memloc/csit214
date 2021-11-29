@@ -1,6 +1,11 @@
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <string>
+
+#include "Token.h"
+#include "Bytecode.h"
+#include "Compiler.h"
 
 using namespace std;
 
@@ -27,6 +32,8 @@ int main(int argc, char* argv[]) {
 	fileStream.close();
 
 	cout << sourceCode << endl;
+
+	vector<Bytecode::Instruction>* program = Compiler::compile(sourceCode);
 
 	return 0;
 }

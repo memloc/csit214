@@ -8,8 +8,15 @@
 namespace Bytecode {
 
     enum class Opcode:int8_t {
+        NOP,
         PUSH,
         POP,
+        PEEK,
+        ADD,
+        SUB,
+        DIV,
+        MUL,
+        PRINT,
     };
 
     struct Operand {
