@@ -21,7 +21,7 @@ set(HEADERS
 )
 
 # add the executable
-add_executable(${PROJECT_NAME} ${SOURCE_DIR}/main.cpp)
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
 	$<BUILD_INTERFACE:${HEADER_DIR}>

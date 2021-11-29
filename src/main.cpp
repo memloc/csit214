@@ -3,8 +3,6 @@
 #include <fstream>
 #include <string>
 
-#include "Token.h"
-#include "Bytecode.h"
 #include "Compiler.h"
 
 using namespace std;
