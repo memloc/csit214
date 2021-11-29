@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 
-#include "Compiler.h"
+#include "../include/Compiler.h"
 
 using namespace std;
 
@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	string sourceCode = extractFileContents(fileStream);
+	sourceCode.pop_back();
 	fileStream.close();
 
 	cout << sourceCode << endl;
