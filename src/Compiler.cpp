@@ -1,19 +1,25 @@
-#include "../include/Compiler.h"
+#include "Compiler.h"
 
+using namespace std;
+using namespace Parser;
+using namespace Compiler;
 
-Parser::Token lex(string& source, int& index) {
+Token lex(string& sourceCode, int& index) {
+    Token token;
 
-    index = 4;
+    for (;index < sourceCode.length(); index++)
+        switch (sourceCode[index]) {
+            case ' ':
+                if (!token.pattern.empty()) {
+                    if (token.type != TokenType::STRING_LITERAL && token.type != TokenType::COMMENT) {
+                        token.pattern += sourceCode[index];
+                    }
+                } else {
+                    token.type = DELIMITER;
+                    token.pattern = sourceCode[index];
+                    return token;
+                }
 
-    Parser::Token temp;
-    temp.type = Parser::TokenType::Number
-    temp.pattern = "";
-
-    string tmp = "";
-    for (int i = 0; i < code.length; i++) {
-        index++;
-
-        switch (code[i]) {
             case '0':
             case '1':
             case '2':
@@ -24,83 +30,155 @@ Parser::Token lex(string& source, int& index) {
             case '7':
             case '8':
             case '9':
-                if (temp.type == Parser::TokenType::INTEGER_LITERAL) {
-                    tmp += code[i];
-                } else if (temp.type == NULL) {
-                    temp.type = Parser::TokenType::INTEGER_LITERAL;
-                    tmp += code[i];
+                if (!token.pattern.empty()) {
+                    if (token.type != INTEGER_LITERAL && token.type != STRING_LITERAL) {
+                        // most likely a new token, so end the current token
+                        --index;
+                        return token;
+                    }
                 } else {
-                    return temp;
+                    // classify the token as a new INTEGER_LITERAL
+                    token.type = INTEGER_LITERAL;
+                    token.pattern += sourceCode[index];
                 }
+                break;
 
-
-
-
-            case '(';
-                if (temp.type == NULL) {
-                    temp.pattern = code[i];
-                    temp.type = Parser::TokenType::PAREN_LEFT;
-                    return temp;
+            case '(':
+                if (!token.pattern.empty()) {
+                    return token;
+                } else {
+                    token.type = TokenType::PAREN_LEFT;
+                    token.pattern = sourceCode[index];
+                    return token;
                 }
-            case ')';
-                if (temp.type == NULL) {
-                    temp.pattern = code[i];
-                    temp.type = Parser::TokenType::PAREN_RIGHT;
-                    return temp;
+            case ')':
+                if (!token.pattern.empty()) {
+                    if (token.type == STRING_LITERAL || token.type == COMMENT) {
+                        token.pattern += sourceCode[index];
+                    } else {
+                        return token;
+                    }
+                }  else {
+                    token.type = TokenType::PAREN_RIGHT;
+                    token.pattern = sourceCode[index];
+                    return token;
                 }
+                break;
                 
 
             case '"':
-                if (temp.type == Parser::TokenType::STRING_LITERAL) {
-                    tmp += code[i];
-                    temp.pattern = tmp;
-                    return temp;
-                } else if (temp.type == NULL) {
-                    temp.type = Parser::TokenType::STRING_LITERAL;
-                    tmp += code[i];
+                if (!token.pattern.empty()) {
+
+                    // FIXME: this does not acount for escaped quotations \" in string literals
+                    if (token.type == STRING_LITERAL) {
+                        token.pattern += sourceCode[index];
+                        return token;
+                    }
+
                 } else {
-                    return temp;
+                    token.type = STRING_LITERAL;
+                    token.pattern += sourceCode[index];
                 }
+                break;
 
   
             default:
-                if (temp.type == NULL) {
-                    temp.type = Parser::TokenType::IDENTIFIER;
-                    tmp += code[i];
-                }
-                if (temp.type == Parser::TokenType::STRING_LITERAL) {
+                if (!token.pattern.empty()) {
 
+                    if (token.type == IDENTIFIER) {
+                        // ensure the character is alphabetic
+                        if (sourceCode[index] >= 'A' && sourceCode[index] <= 'Z' || sourceCode[index] >= 'a' && sourceCode[index] <= 'z') { 
+                            token.pattern += sourceCode[index];
+                        } else {
+                            // assume that only alphabetic character make up an identifier
+                            cout << "Undefined behavior during tokenization." << endl << "Token: " << token.pattern << " + " << sourceCode[index];
+                            exit(1); 
+                        }
+                    } else if (token.type == STRING_LITERAL) {
 
+                        // character is contained within double quotes
+                        token.pattern += sourceCode[index];
 
-
-                }
-
-                if (temp.type == Parser::TokenType::IDENTIFIER) {
-                    if (tmp == "print") {
-                        temp.pattern = tmp;
-                        return tmp;
-                    } else if (index == 4 && tmp != "start") {
-                        exit(1);
                     }
-                }
+                } else {
+                    // token type has not already been classified
+                    // if alphabetic assume the token is an identifier
+                    if (sourceCode[index] >= 'A' && sourceCode[index] <= 'Z' || sourceCode[index] >= 'a' && sourceCode[index] <= 'z') {
+                        token.type = IDENTIFIER;
+                        token.pattern = sourceCode[index];
+                    }
 
-                tmpString += code[i];
+                }
         }
-    }
 }
 
-vector<Parser::Token>* parse(string& source) {
-    vector<Parser::Token> tokens;
 
-    int sourcePosition = 0;
-    
-    while (index < source.length) {
-        tokens.push_back(lex(source), sourcePosition);
+vector<Token>* parse(vector<Token>& tokenStream) {
+    vector<Token>* statement;
+
+    // iterate through each token creating statements, and checking syntax
+    for (Token token : tokenStream) {
+        switch(token.type) {
+            case KEYWORD:
+            case DELIMITER:
+            case IDENTIFIER:
+            case OPERATOR:
+            case COMMENT:
+            case PAREN_LEFT:
+                // if statement begins with identifier and contains assume this is a function statement, so it is syntactically correct 
+                if (statement->front().type == IDENTIFIER) {
+                    // statement = ['IDENTIFIER':'print'],['PAREN_LEFT':'(']
+                    statement->push_back(token);
+                } else if (statement->front().type == COMMENT) {
+                    // then this statement is a still a comment
+                    statement->push_back(token);
+                }
+            case PAREN_RIGHT:
+            case INTEGER_LITERAL:
+            case STRING_LITERAL:
+            break;
+            //...
+        }
     }
+
+    return statement;
 }
 
 // translate tokens from the token stream into instructions in bytecode representation
-Bytecode::Instruction translate(vector<Parser::Token>&);
+Bytecode::Instruction translate(vector<Token>& statementStream) {
+    Bytecode::Instruction instruction;
+
+    // create an instruction from one or more tokens
+
+    return instruction;
+}
 
 // performs lexing, parsing, and translation into the bytecode representation of the program
-vector<Bytecode::Instruction>* compile(string &);
+vector<Bytecode::Instruction>* compile(string& sourceCode) {
+    vector<Token> tokens;
+
+    // tokenize the input source code  
+    int sourcePosition = 0;
+    while (sourcePosition < sourceCode.length()) {
+        tokens.push_back(Compiler::lex(sourceCode, sourcePosition));
+    }
+
+    // parse the syntax re-grouping tokens into streams of statements while ensuring the correctness
+    vector<Token>* statementStream; 
+    while (!tokens.empty()) {
+        vector<Token>* statement = Compiler::parse(tokens);
+
+        // Pushback tokens that comprise a single statement
+        for (Token token: *statement) {
+            statementStream->push_back(token);
+        }
+    }
+
+    // finally translate the tokens into bytecode to be interpretted by the virtual machine
+    vector<Bytecode::Instruction>* bytecode; 
+    while (!statementStream->empty()) {
+        bytecode->push_back(Compiler::translate(*statementStream));
+    }
+
+    return bytecode;
+}

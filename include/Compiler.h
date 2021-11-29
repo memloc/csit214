@@ -24,13 +24,13 @@ namespace Compiler {
     // produces a token from input source code
     Parser::Token lex(string&, int&);
 
-    // produce the token stream
-    vector<Parser::Token>* parse(string&);
+    // parse the syntax re-grouping/re-ordering tokens into streams of statements
+    vector<Parser::Token>* parse(vector<Parser::Token>&);
 
-    // translate tokens from the token stream into instructions in bytecode representation
+    // translate tokens from the token stream into instructions in bytecode
     Bytecode::Instruction translate(vector<Parser::Token>&);
 
-    // performs lexing, parsing, and translation into the bytecode representation of the program
+    // performs the entire process of lexing, parsing and translation from source code into the bytecode
     vector<Bytecode::Instruction>* compile(string &);
 
 }

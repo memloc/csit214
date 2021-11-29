@@ -9,6 +9,7 @@ namespace Parser {
 
   enum TokenType {
     DELIMITER,
+    KEYWORD,
     IDENTIFIER,
     STRING_LITERAL,
     INTEGER_LITERAL,
