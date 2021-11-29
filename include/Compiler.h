@@ -7,31 +7,34 @@
 #include "Token.h"
 #include "Bytecode.h"
 
-namespace Compiler {
+namespace Compiler
+{
 
     using namespace std;
 
-    enum ExceptionType {
+    enum ExceptionType
+    {
         NONE,
         UNDEFINED_BEHAVIOR,
     };
 
-    struct Exception {
+    struct Exception
+    {
         ExceptionType type;
         string message;
     };
 
     // produces a token from input source code
-    Parser::Token lex(string&, int&);
+    vector<Parser::Token> lex(string &);
 
     // parse the syntax re-grouping/re-ordering tokens into streams of statements
-    vector<Parser::Token>* parse(vector<Parser::Token>&);
+    vector<Parser::Token> *parse(vector<Parser::Token> &);
 
     // translate tokens from the token stream into instructions in bytecode
-    Bytecode::Instruction translate(vector<Parser::Token>&);
+    Bytecode::Instruction translate(vector<Parser::Token> &);
 
     // performs the entire process of lexing, parsing and translation from source code into the bytecode
-    vector<Bytecode::Instruction>* compile(string &);
+    vector<Bytecode::Instruction> *compile(string &);
 
 }
 

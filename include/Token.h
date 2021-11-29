@@ -3,11 +3,14 @@
 
 #include <iostream>
 
-namespace Parser {
+namespace Parser
+{
 
   using namespace std;
 
-  enum TokenType {
+  enum TokenType
+  {
+    WHITE_SPACE,
     DELIMITER,
     KEYWORD,
     IDENTIFIER,
@@ -15,15 +18,17 @@ namespace Parser {
     INTEGER_LITERAL,
     PAREN_LEFT,
     PAREN_RIGHT,
+    ARITHMETIC_OPERATOR,
     OPERATOR,
     COMMENT,
-  }; 
-  
+  };
+
   /**
    * @brief A pairing of a TokenType and Lexeme, the lexeme being a sequence
    * of characters corresponding to a pattern with predefined semantic meaning.
    */
-  struct Token {
+  struct Token
+  {
     TokenType type;
     string pattern;
   };
