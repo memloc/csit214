@@ -180,8 +180,8 @@ Bytecode::Instruction Compiler::translate(vector<Token>& statementStream) {
 // performs lexing, parsing, and translation into the bytecode representation of the program
 vector<Bytecode::Instruction>* Compiler::compile(string& sourceCode) {
     vector<Token> tokens = lex(sourceCode);
-	cout << "Segmentation fault fixed: remove me";
 
+/*
     // parse the syntax re-grouping tokens into streams of statements while ensuring the correctness
     vector<Token>* statementStream; 
     while (!tokens.empty()) {
@@ -198,6 +198,8 @@ vector<Bytecode::Instruction>* Compiler::compile(string& sourceCode) {
     while (!statementStream->empty()) {
         bytecode->push_back(Compiler::translate(*statementStream));
     }
+*/
 
+    vector<Bytecode::Instruction>* bytecode; 
     return bytecode;
 }
