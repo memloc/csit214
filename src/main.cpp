@@ -27,7 +27,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	string sourceCode = extractFileContents(fileStream);
-	sourceCode.pop_back();
 	fileStream.close();
 
 	cout << sourceCode << endl;
@@ -52,5 +51,6 @@ string extractFileContents(ifstream& fileStream) {
 		}
 	}
 
+	contents[size] = '\0';
 	return (const char*)contents;
 }
