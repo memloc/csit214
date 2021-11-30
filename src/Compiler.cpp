@@ -9,15 +9,23 @@ void completedToken(Token &token, vector<Token> &tokens)
 	if (token.type != WHITE_SPACE)
 	{
 		tokens.push_back(token);
+
+		// TODO: Remove me, for debugging
+		cout << "Generated Token: " << token.pattern << endl;
 	}
+
 
 	token.type = WHITE_SPACE;
 	token.pattern.erase();
 }
 
-vector<Token> lex(string &sourceCode)
+vector<Token> Compiler::lex(string &sourceCode)
 {
-	Token curToken{WHITE_SPACE, ""};
+	Token curToken = { 
+		.type = WHITE_SPACE,
+		.pattern = ""
+	};
+
 	vector<Token> tokens;
 	for (char c : sourceCode)
 	{
@@ -133,6 +141,8 @@ vector<Token>* Compiler::parse(vector<Token>& tokenStream) {
     // iterate through each token creating statements, and checking syntax
     for (Token token : tokenStream) {
         switch(token.type) {
+			case WHITE_SPACE:
+			case ARITHMETIC_OPERATOR:
             case KEYWORD:
             case DELIMITER:
             case IDENTIFIER:
@@ -167,33 +177,27 @@ Bytecode::Instruction Compiler::translate(vector<Token>& statementStream) {
     return instruction;
 }
 
-// Commented by @thpham1997
 // performs lexing, parsing, and translation into the bytecode representation of the program
-// vector<Bytecode::Instruction>* Compiler::compile(string& sourceCode) {
-//     vector<Token> tokens;
+vector<Bytecode::Instruction>* Compiler::compile(string& sourceCode) {
+    vector<Token> tokens = lex(sourceCode);
+	cout << "Segmentation fault fixed: remove me";
 
-//     // tokenize the input source code  
-//     int sourcePosition = 0;
-//     while (sourcePosition < sourceCode.length()) {
-//         tokens.push_back(Compiler::lex(sourceCode, sourcePosition));
-//     }
+    // parse the syntax re-grouping tokens into streams of statements while ensuring the correctness
+    vector<Token>* statementStream; 
+    while (!tokens.empty()) {
+        vector<Token>* statement = Compiler::parse(tokens);
 
-//     // parse the syntax re-grouping tokens into streams of statements while ensuring the correctness
-//     vector<Token>* statementStream; 
-//     while (!tokens.empty()) {
-//         vector<Token>* statement = Compiler::parse(tokens);
+        // Pushback tokens that comprise a single statement
+        for (Token token: *statement) {
+            statementStream->push_back(token);
+        }
+    }
 
-//         // Pushback tokens that comprise a single statement
-//         for (Token token: *statement) {
-//             statementStream->push_back(token);
-//         }
-//     }
+    // finally translate the tokens into bytecode to be interpretted by the virtual machine
+    vector<Bytecode::Instruction>* bytecode; 
+    while (!statementStream->empty()) {
+        bytecode->push_back(Compiler::translate(*statementStream));
+    }
 
-//     // finally translate the tokens into bytecode to be interpretted by the virtual machine
-//     vector<Bytecode::Instruction>* bytecode; 
-//     while (!statementStream->empty()) {
-//         bytecode->push_back(Compiler::translate(*statementStream));
-//     }
-
-//     return bytecode;
-// }
+    return bytecode;
+}
