@@ -66,7 +66,7 @@ vector<Token> Compiler::lex(string &sourceCode)
 				curToken.type = OPERATOR;
 				curToken.pattern = c;
 				completedToken(curToken, tokens); //token{WHITE_SPACE, ""}
-			 }
+			}
 			else
 			{
 				curToken.pattern += c;
