@@ -3,6 +3,8 @@ project(simple)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wc++11-extensions")
+
 # source directories
 set(HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
@@ -11,11 +13,13 @@ set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(SOURCES 
 	"${SOURCE_DIR}/main.cpp"
 	"${SOURCE_DIR}/Compiler.cpp"
+	"${SOURCE_DIR}/Parser.cpp"
 )
 
 set(HEADERS
 	"${HEADER_DIR}/Token.h"
 	"${HEADER_DIR}/Bytecode.h"
+	"${HEADER_DIR}/Parser.h"
 	"${HEADER_DIR}/Compiler.h"
 	"${HEADER_DIR}/VirtualMachine.h"
 )

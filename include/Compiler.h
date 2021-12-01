@@ -27,9 +27,6 @@ namespace Compiler
     // produces a token from input source code
     vector<Parser::Token> lex(string &);
 
-    // parse the syntax re-grouping/re-ordering tokens into streams of statements
-    vector<Parser::Token> *parse(vector<Parser::Token> &);
-
     // translate tokens from the token stream into instructions in bytecode
     Bytecode::Instruction translate(vector<Parser::Token> &);
 

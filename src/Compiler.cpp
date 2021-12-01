@@ -1,8 +1,16 @@
 #include "../include/Compiler.h"
+#include "Bytecode.h"
+#include "Token.h"
+#include "Parser.h"
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
 
 using namespace std;
 using namespace Parser;
 using namespace Compiler;
+
 
 void completedToken(Token &token, vector<Token> &tokens)
 {
@@ -11,7 +19,7 @@ void completedToken(Token &token, vector<Token> &tokens)
 		tokens.push_back(token);
 
 		// TODO: Remove me, for debugging
-		cout << "Generated Token: " << token.pattern << endl;
+		cout << "Generated Token: { '" << token.pattern << "', '" << token.type << "' }" << endl;
 	}
 
 
@@ -74,6 +82,7 @@ vector<Token> Compiler::lex(string &sourceCode)
 			break;
 
 		case ';':
+		case '\n':
 		case ' ':
 			if (curToken.type == STRING_LITERAL)
 			{
@@ -134,40 +143,6 @@ vector<Token> Compiler::lex(string &sourceCode)
 	return tokens;
 }
 
-
-vector<Token>* Compiler::parse(vector<Token>& tokenStream) {
-    vector<Token>* statement;
-
-    // iterate through each token creating statements, and checking syntax
-    for (Token token : tokenStream) {
-        switch(token.type) {
-			case WHITE_SPACE:
-			case ARITHMETIC_OPERATOR:
-            case KEYWORD:
-            case DELIMITER:
-            case IDENTIFIER:
-            case OPERATOR:
-            case COMMENT:
-            case PAREN_LEFT:
-                // if statement begins with identifier and contains assume this is a function statement, so it is syntactically correct 
-                if (statement->front().type == IDENTIFIER) {
-                    // statement = ['IDENTIFIER':'print'],['PAREN_LEFT':'(']
-                    statement->push_back(token);
-                } else if (statement->front().type == COMMENT) {
-                    // then this statement is a still a comment
-                    statement->push_back(token);
-                }
-            case PAREN_RIGHT:
-            case INTEGER_LITERAL:
-            case STRING_LITERAL:
-            break;
-            //...
-        }
-    }
-
-    return statement;
-}
-
 // translate tokens from the token stream into instructions in bytecode representation
 Bytecode::Instruction Compiler::translate(vector<Token>& statementStream) {
     Bytecode::Instruction instruction;
@@ -179,26 +154,17 @@ Bytecode::Instruction Compiler::translate(vector<Token>& statementStream) {
 
 // performs lexing, parsing, and translation into the bytecode representation of the program
 vector<Bytecode::Instruction>* Compiler::compile(string& sourceCode) {
+	cout << "\n======== Generating Tokens ========\n" << endl;
     vector<Token> tokens = lex(sourceCode);
 
-/*
-    // parse the syntax re-grouping tokens into streams of statements while ensuring the correctness
-    vector<Token>* statementStream; 
-    while (!tokens.empty()) {
-        vector<Token>* statement = Compiler::parse(tokens);
+	cout << "\n======== Parsing Expressions ========\n" << endl;
+	vector<Token>* stream = parser(&tokens);
 
-        // Pushback tokens that comprise a single statement
-        for (Token token: *statement) {
-            statementStream->push_back(token);
-        }
+	cout << "\n======== Token Stream ========\n";
+    for (Token token : *stream) {
+        cout << token.pattern << " ";
     }
-
-    // finally translate the tokens into bytecode to be interpretted by the virtual machine
-    vector<Bytecode::Instruction>* bytecode; 
-    while (!statementStream->empty()) {
-        bytecode->push_back(Compiler::translate(*statementStream));
-    }
-*/
+    cout << "\n\n";
 
     vector<Bytecode::Instruction>* bytecode; 
     return bytecode;
