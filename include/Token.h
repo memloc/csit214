@@ -11,15 +11,12 @@ namespace Parser
   enum TokenType
   {
     WHITE_SPACE,
-    DELIMITER,
     KEYWORD,
     IDENTIFIER,
+    OPERATOR,
+    ARITHMETIC_OPERATOR,
     STRING_LITERAL,
     INTEGER_LITERAL,
-    PAREN_LEFT,
-    PAREN_RIGHT,
-    ARITHMETIC_OPERATOR,
-    OPERATOR,
     COMMENT,
   };
 
