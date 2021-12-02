@@ -4,17 +4,33 @@
 #include <vector>
 #include <iostream>
 
-#include "Token.h"
-#include "Bytecode.h"
-#include "Compiler.h"
+#include "Lexer.h"
+
+using namespace std;
 
 // Define the keywords of the language
 void defineLanguageElements();
 
-// Look up a token in the defined keywords for the language to check if it is valid
-bool keywordDefined(Parser::Token&, int offset);
+// Find the operator index of a nested expression
+vector<int> findOperatorIndex(vector<Token>);
 
-// parse the syntax re-grouping/re-ordering tokens into streams of statements
-std::vector<Parser::Token>* parser(std::vector<Parser::Token>*);
+
+int chosenOperatorIndex(vector<int>, vector<Token>);
+
+
+vector<vector<Token>> separateExpression(int, vector<Token>);
+
+
+vector<Token> appendTokens(vector<Token> , vector<Token> , vector<Token> );
+
+vector<Token> discardParen(vector<Token>);
+
+vector<Token> orderTokens(vector<Token>, vector<Token>,vector<Token>);
+
+// Look up a token in the defined keywords for the language to check if it is valid
+bool keywordDefined(Token&, int offset);
+
+// Parse the syntax re-grouping/re-ordering tokens into streams of statements
+vector<Token>* parser(vector<Token>*);
 
 #endif // PARSER_H

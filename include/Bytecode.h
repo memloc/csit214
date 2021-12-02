@@ -5,9 +5,11 @@
 
 #include "Token.h"
 
-namespace Bytecode {
+namespace Bytecode 
+{
 
-    enum class Opcode:int8_t {
+    enum class Opcode:int8_t 
+    {
         NOP,
         PUSH,
         POP,
@@ -19,14 +21,12 @@ namespace Bytecode {
         PRINT,
     };
 
-    struct Operand {
-        Parser::Token token;
-    };
 
     // A pairing of an operation and operand
-    struct Instruction {
-        Opcode operation;
-        Operand param;
+    struct Instruction 
+    {
+	  Opcode operation;
+	  Token operand;
     };
 
 }
