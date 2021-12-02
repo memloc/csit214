@@ -3,7 +3,7 @@ project(simple)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wc++11-extensions")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # source directories
 set(HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
