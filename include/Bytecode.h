@@ -21,16 +21,12 @@ namespace Bytecode
         PRINT,
     };
 
-    struct Operand 
-    {
-        Token token;
-    };
 
     // A pairing of an operation and operand
     struct Instruction 
     {
-        Opcode operation;
-        Operand* operand;
+	  Opcode operation;
+	  Token operand;
     };
 
 }

@@ -14,42 +14,42 @@ using namespace std;
 using namespace Bytecode;
 
 // translate a token from the parsed token stream into in bytecode
-Bytecode::Instruction translate(Token& token) {
-    Bytecode::Instruction instruction;
+Bytecode::Instruction* translate(Token& token) {
+  Bytecode::Instruction* instruction = new Bytecode::Instruction;
+
 	switch (token.type) {
 		case KEYWORD:
 			// TODO: clean hardcoded keyword patterns
 			if (token.pattern == "print") 
-				instruction.operation = Opcode::PRINT;
+				instruction->operation = Opcode::PRINT;
 			else if (token.pattern == "start") 
-				instruction.operation = Opcode::NOP;
+				instruction->operation = Opcode::NOP;
 			else if (token.pattern == "end") 
-				instruction.operation = Opcode::NOP;
+				instruction->operation = Opcode::NOP;
 			break;
 
 		case STRING_LITERAL:
-			instruction.operation = Opcode::PUSH;
-			instruction.operand->token = token;
+			instruction->operation = Opcode::PUSH;
+			instruction->operand = token;
 			break;
-
 		case INTEGER_LITERAL:
-			instruction.operation = Opcode::PUSH;
-			instruction.operand->token = token;
+			instruction->operation = Opcode::PUSH;
+			instruction->operand = token;
 			break;
 
 		case ARITHMETIC_OPERATOR:
 			if (token.pattern == "+")
-				instruction.operation = Opcode::ADD;
+				instruction->operation = Opcode::ADD;
 			else if (token.pattern == "-")
-				instruction.operation = Opcode::SUB;
+				instruction->operation = Opcode::SUB;
 			else if (token.pattern == "*")
-				instruction.operation = Opcode::MUL;
+				instruction->operation = Opcode::MUL;
 			else if (token.pattern == "/")
-				instruction.operation = Opcode::DIV;
+				instruction->operation = Opcode::DIV;
 			break;
 
 		default:
-			instruction.operation = Opcode::NOP;
+			instruction->operation = Opcode::NOP;
 	}
 
     return instruction;
@@ -72,11 +72,10 @@ vector<Bytecode::Instruction>* compile(string& sourceCode)
     cout << "\n\n";
 
     vector<Bytecode::Instruction>* bytecode = new vector<Bytecode::Instruction>;
-	for (Token token : *stream) 
-	{
-		Bytecode::Instruction instruction = translate(token);
-		bytecode->push_back(instruction);
-		stream->pop_back();
+	for (Token token : *stream) {
+	  Bytecode::Instruction* instruction = translate(token);
+	  bytecode->push_back(*instruction);
+	  stream->pop_back();
 	}
 
     return bytecode;

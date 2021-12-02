@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
 	cout << sourceCode << endl;
 
-	vector<Bytecode::Instruction>* program = compile(sourceCode);
+	vector<Bytecode::Instruction>* bytecode = compile(sourceCode);
 
 	return 0;
 }

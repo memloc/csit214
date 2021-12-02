@@ -22,9 +22,9 @@ struct Exception
 };
 
 // translate tokens from the token stream into instructions in bytecode
-vector<Bytecode::Instruction>* translate(vector<Token>*);
+Bytecode::Instruction* translate(Token&);
 
 // performs the entire process of lexing, parsing and translation from source code into the bytecode
-vector<Bytecode::Instruction> *compile(string &);
+vector<Bytecode::Instruction>* compile(string &);
 
 #endif // COMPILER_H
