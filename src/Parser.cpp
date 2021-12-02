@@ -30,12 +30,47 @@ bool keywordDefined(Token& token) {
 	return (LANG_KEYWORDS.find(token.pattern)->second == KEYWORD);
 }
 
+vector<int>* findOperatorIndex(vector<Token>& expression)
+{
+	vector<int>* operator_index = new vector<int>;
+	for (size_t i = 0; i < expression.size(); i++)
+	{
+		if (expression.at(i).type == INTEGER_LITERAL)
+		{
+			operator_index->push_back(++i);
+		}
+		else if (expression.at(i).type == PAREN_LEFT)
+		{
+			int count = 1;
+			for (size_t j = i + 1; j < expression.size(); j++)
+			{
+				if (expression.at(j).type == PAREN_LEFT)
+				{
+					count++;
+				}
+				else if (expression.at(j).type == PAREN_RIGHT)
+				{
+					count--;
+				}
+
+				if (count == 0)
+				{
+					operator_index->push_back(j + 1);
+					i = j + 1;
+					break;
+				}
+			}
+		}
+	}
+	operator_index->pop_back();
+	return operator_index;
+}
+
 
 vector<Token>* parseExpression(vector<Token>* stream, int& offset) 
 {
     vector<Token>* expression = new vector<Token>;
     Token keyword = stream->at(offset++);
-    expression->push_back(keyword);
 
     // Check the keyword to determine if the keyword requires arguments
     if (keyword.pattern == "start" || keyword.pattern == "end") {
@@ -46,8 +81,6 @@ vector<Token>* parseExpression(vector<Token>* stream, int& offset)
 
     // Keep track nested paren pair matching, the depth being the number pairs the offset is in
     int nestingDepth = 0; 
-    int outerExpressionSize = 0; 
-    int innerExpressionSize = 0;
     bool containsInt = false;
     bool containsStr = false;
 
@@ -55,22 +88,13 @@ vector<Token>* parseExpression(vector<Token>* stream, int& offset)
     {
         Token curToken = stream->at(offset);
 
-        if (curToken.type == OPERATOR) 
+        if (curToken.type == PAREN_LEFT) 
         {
-            // Determine the level number of nested parens we are nested within
-            nestingDepth = (curToken.pattern.at(0) == '(') ? nestingDepth+1 : nestingDepth-1;
-            // cout << "Depth: " << nestingDepth << endl;
-
-            // Then we have iterated through the entire size of the expression
-            if (nestingDepth == 0) 
-            {
-
-                if (outerExpressionSize == innerExpressionSize) 
-                {
-                    // Determine if parens must be factored into the order of operations? 
-                }
-                break;
-            }
+            nestingDepth++;
+        }
+        else if (curToken.type == PAREN_RIGHT)
+        {
+            nestingDepth--;
         }
         else 
         {
@@ -92,20 +116,41 @@ vector<Token>* parseExpression(vector<Token>* stream, int& offset)
                     cout << "Error: Unexpected token \'" <<  curToken.pattern << "\' found in '" << keyword.pattern << "' expression";
                     exit(1);
             }
-            innerExpressionSize++;
-            outerExpressionSize++;
             expression->push_back(curToken);
+        }
+
+        // If matched the last pair of parens then exit
+        if (nestingDepth == 0) {
+            break;
         }
     }
 
     // TODO: Remove me
-    cout << "\tExpression Complete: "; 
+    cout << "\nExpression Complete: "; 
     for (Token token : *expression)
     {
         cout << token.pattern << " ";
     }
     cout << endl;
 
+
+
+    // Call your function here 
+    vector<int>* operatorIndexes = findOperatorIndex(*expression);
+
+
+
+
+    // TODO: Remove me
+    cout << "\tOperator Indexes:\n";
+    for (int index : *operatorIndexes) {
+        cout << "\t  Expr[" << index << "]: " << expression->at(index).pattern << "\n";
+    }
+
+
+    // return expression postfix notation following order of operations
+    // Add the keyword for the expression to the end (i.e 1 2 + print)
+    expression->push_back(keyword);
     return expression;
 }
 
@@ -135,7 +180,10 @@ vector<Token>* parser(vector<Token>* stream)
         }
     }
 
-
-
     return result;
 };
+
+
+// tokens
+// (, ), print preserved_word, other will be identifier.
+// expression inside print(          String||Math               )
