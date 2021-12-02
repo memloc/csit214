@@ -30,7 +30,7 @@ namespace Bytecode
     struct Instruction 
     {
         Opcode operation;
-        Operand param;
+        Operand* operand;
     };
 
 }
