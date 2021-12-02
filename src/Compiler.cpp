@@ -71,7 +71,7 @@ vector<Token> Compiler::lex(string &sourceCode)
 			if (curToken.type != STRING_LITERAL)
 			{
 				completedToken(curToken, tokens);
-				curToken.type = OPERATOR;
+				curToken.type = (c == '(') ? PAREN_LEFT : PAREN_RIGHT;
 				curToken.pattern = c;
 				completedToken(curToken, tokens); //token{WHITE_SPACE, ""}
 			}
@@ -148,6 +148,7 @@ Bytecode::Instruction Compiler::translate(vector<Token>& statementStream) {
     Bytecode::Instruction instruction;
 
     // create an instruction from one or more tokens
+
 
     return instruction;
 }
