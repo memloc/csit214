@@ -2,11 +2,7 @@
 #include <vector>
 #include <iostream>
 
-#include "Compiler.h"
-#include "Token.h"
-#include "Bytecode.h"
-
-using namespace Parser;
+#include "Lexer.h"
 
 // Hashmap for quickly looking up language keywords
 std::map<string, TokenType> LANG_KEYWORDS;
@@ -75,7 +71,7 @@ vector<Token>* parseExpression(vector<Token>* stream, int& offset)
     // Check the keyword to determine if the keyword requires arguments
     if (keyword.pattern == "start" || keyword.pattern == "end") {
         // Atom expressions stand on their own with no params / args
-        cout << "(Atom)\tExpression Complete: " << keyword.pattern << endl;
+        cout << "\n(Atom)\tExpression Complete: " << keyword.pattern << endl;
         return expression;
     }
 
@@ -91,10 +87,16 @@ vector<Token>* parseExpression(vector<Token>* stream, int& offset)
         if (curToken.type == PAREN_LEFT) 
         {
             nestingDepth++;
+            if (nestingDepth > 1) {
+                expression->push_back(curToken);
+            }
         }
         else if (curToken.type == PAREN_RIGHT)
         {
             nestingDepth--;
+            if (nestingDepth >= 1) {
+                expression->push_back(curToken);
+            }
         }
         else 
         {
@@ -126,13 +128,12 @@ vector<Token>* parseExpression(vector<Token>* stream, int& offset)
     }
 
     // TODO: Remove me
-    cout << "\nExpression Complete: "; 
+    cout << "\nExpression: "; 
     for (Token token : *expression)
     {
         cout << token.pattern << " ";
     }
     cout << endl;
-
 
 
     // Call your function here 
@@ -142,9 +143,9 @@ vector<Token>* parseExpression(vector<Token>* stream, int& offset)
 
 
     // TODO: Remove me
-    cout << "\tOperator Indexes:\n";
+    cout << "Operator Indexes\n";
     for (int index : *operatorIndexes) {
-        cout << "\t  Expr[" << index << "]: " << expression->at(index).pattern << "\n";
+        cout << "  index[" << index << "]: " << expression->at(index).pattern << "\n";
     }
 
 
@@ -182,8 +183,3 @@ vector<Token>* parser(vector<Token>* stream)
 
     return result;
 };
-
-
-// tokens
-// (, ), print preserved_word, other will be identifier.
-// expression inside print(          String||Math               )

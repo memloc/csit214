@@ -12,14 +12,16 @@ set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 # project source files
 set(SOURCES 
 	"${SOURCE_DIR}/main.cpp"
-	"${SOURCE_DIR}/Compiler.cpp"
+	"${SOURCE_DIR}/Lexer.cpp"
 	"${SOURCE_DIR}/Parser.cpp"
+	"${SOURCE_DIR}/Compiler.cpp"
 )
 
 set(HEADERS
 	"${HEADER_DIR}/Token.h"
-	"${HEADER_DIR}/Bytecode.h"
+	"${HEADER_DIR}/Lexer.h"
 	"${HEADER_DIR}/Parser.h"
+	"${HEADER_DIR}/Bytecode.h"
 	"${HEADER_DIR}/Compiler.h"
 	"${HEADER_DIR}/VirtualMachine.h"
 )

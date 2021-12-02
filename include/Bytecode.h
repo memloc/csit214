@@ -23,7 +23,7 @@ namespace Bytecode
 
     struct Operand 
     {
-        Parser::Token token;
+        Token token;
     };
 
     // A pairing of an operation and operand
