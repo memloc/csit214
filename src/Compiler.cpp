@@ -13,10 +13,18 @@
 using namespace std;
 using namespace Bytecode;
 
-// translate a token from the parsed token stream into in bytecode
-Bytecode::Instruction* translate(Token& token) {
+// converts a token into one or more words
+vector<Word> convert(Token& token) {
+  vector<Word> statement;
+  return statement;
+};
+
+// Translate all of the tokens in the token stream into bytecode
+vector<Bytecode::Instruction> translate(vector<Token>& tokenStream) {
+  vector<Bytecode::Instruction> bytecode;
   Bytecode::Instruction* instruction = new Bytecode::Instruction;
 
+  for (Token token : tokenStream) {
 	switch (token.type) {
 		case KEYWORD:
 			// TODO: clean hardcoded keyword patterns
@@ -30,11 +38,23 @@ Bytecode::Instruction* translate(Token& token) {
 
 		case STRING_LITERAL:
 			instruction->operation = Opcode::PUSH;
-			instruction->operand = token;
+			//
+			//
+			//
+			//
+			//
+			
+
+
 			break;
 		case INTEGER_LITERAL:
 			instruction->operation = Opcode::PUSH;
-			instruction->operand = token;
+			//
+			// instruction->operand
+			//
+			//
+			
+
 			break;
 
 		case ARITHMETIC_OPERATOR:
@@ -51,8 +71,9 @@ Bytecode::Instruction* translate(Token& token) {
 		default:
 			instruction->operation = Opcode::NOP;
 	}
+  }
 
-    return instruction;
+  return bytecode;
 }
 
 // performs lexing, parsing, and translation into the bytecode representation of the program
@@ -72,11 +93,12 @@ vector<Bytecode::Instruction>* compile(string& sourceCode)
     cout << "\n\n";
 
     vector<Bytecode::Instruction>* bytecode = new vector<Bytecode::Instruction>;
-	for (Token token : *stream) {
-	  Bytecode::Instruction* instruction = translate(token);
-	  bytecode->push_back(*instruction);
-	  stream->pop_back();
-	}
+	//
+	// Translate bytecode 
+	//
+	//
+	//
+		 
 
     return bytecode;
 }
