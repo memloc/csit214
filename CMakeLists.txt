@@ -15,6 +15,7 @@ set(SOURCES
 	"${SOURCE_DIR}/Lexer.cpp"
 	"${SOURCE_DIR}/Parser.cpp"
 	"${SOURCE_DIR}/Compiler.cpp"
+	"${SOURCE_DIR}/VirtualMachine.cpp"
 )
 
 set(HEADERS
