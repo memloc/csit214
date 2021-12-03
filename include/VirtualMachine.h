@@ -46,6 +46,8 @@ private:
   void load();
   // execute a single instruction
   void step();
+
+  void loaderDebugPrint();
 };
 
 } // namespace VM

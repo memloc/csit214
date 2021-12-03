@@ -27,9 +27,8 @@ namespace Bytecode
 	CHAR32_T,
   };
   
-  /* Extra 16-bits left-over to put inside the WORD
-	 enum class WordFlags:uint8_t {};
-  */
+	enum class WordFlag:uint8_t {
+	};
   
   /*
    * @brief A fixed size unit of memory to store data (64-bits)

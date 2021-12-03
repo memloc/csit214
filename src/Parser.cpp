@@ -154,16 +154,15 @@ vector<Token> orderTokens(vector<Token> tokenL, vector<Token> tokenR,
 	}
 }
 
-vector<Token> *parseExpression(vector<Token> *stream, int &offset) {
-  vector<Token> *expression = new vector<Token>;
+vector<Token> parseExpression(vector<Token> *stream, int &offset) {
+  vector<Token>* expression = new vector<Token>;
   Token keyword = stream->at(offset);
 
   // Check the keyword to determine if the keyword requires arguments
   if (keyword.pattern == "start" || keyword.pattern == "end") {
     // Atom expressions stand on their own with no params / args
-    cout << "\n(Atom)\tExpression Complete: " << keyword.pattern << endl;
     expression->push_back(keyword);
-    return expression;
+    return *expression;
   }
 
   // Otherwise skip the keyword token and parse the expression
@@ -238,16 +237,10 @@ vector<Token> *parseExpression(vector<Token> *stream, int &offset) {
     }
   }
 
-  // TODO: Remove me
-  cout << "\nExpression: ";
-  for (Token token : *expression) {
-    cout << token.pattern << " ";
-  }
-  cout << endl;
 
-
-
-  if (expression->size() > 2) {
+  // If there are no arguments and it is not a string, parse the expression to format the bytecode 
+  // stream in post-op notation following order of operations.
+  if (expression->size() > 2 && containsStr == false) {
     int LEFT;
 
     vector<Token> newExpression = discardParen(*expression);
@@ -258,16 +251,29 @@ vector<Token> *parseExpression(vector<Token> *stream, int &offset) {
 
 
     // TODO: Remove me
-    cout << "Operator Indexes\n";
+    cout << "Expression: ";
     for (Token token : orderedTokens) {
-      cout << "Order: " << token.pattern << "\n";
+      cout << " " << token.pattern;
     }
+    cout << endl;
+
+    // return expression postfix notation following order of operations
+    // Add the keyword for the expression to the end (i.e 1 2 + print)
+    orderedTokens.push_back(keyword);
+    delete expression;
+    return orderedTokens;
   }
 
-  // return expression postfix notation following order of operations
-  // Add the keyword for the expression to the end (i.e 1 2 + print)
+  // TODO: Remove me
+  cout << "Expression: ";
+  for (Token token : *expression) {
+    cout << token.pattern << " ";
+  }
+  cout << endl;
+
+  // If the expression has no arguments return it as it is
   expression->push_back(keyword);
-  return expression;
+  return *expression;
 }
 
 vector<Token> *parser(vector<Token> *stream) {
@@ -291,9 +297,9 @@ vector<Token> *parser(vector<Token> *stream) {
     if (keywordDefined(curToken)) {
       // Parse the tokens within the current expression, at the current offset
       // then continue parsing after wherever the previous expression left off
-      vector<Token> *expression = parseExpression(stream, offset);
+      vector<Token> expression = parseExpression(stream, offset);
 
-      for (Token token : *expression) {
+      for (Token token : expression) {
         result->push_back(token);
       }
     } else {

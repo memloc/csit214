@@ -12,6 +12,9 @@
 #include "Token.h"
 #include "Lexer.h"
 
+// Global Iota
+int IOTA = 1;
+
 using namespace std;
 using namespace Bytecode;
 
@@ -45,6 +48,15 @@ vector<Bytecode::Instruction>* convert(Token &token)
 	return data;
 };
 
+// Iterator, resets on true
+int iota(bool reset=false) 
+{
+	int n = IOTA++;
+	if (reset)
+		IOTA = 1;
+	return n;
+}
+
 // Translate all of the tokens in the token stream into bytecode
 vector<Bytecode::Instruction>* translate(vector<Token> &tokenStream)
 {
@@ -59,12 +71,13 @@ vector<Bytecode::Instruction>* translate(vector<Token> &tokenStream)
 			// TODO: clean hardcoded keyword patterns
 			if (token.pattern == "print")
 			{
-				Instruction inst1 { .operation = Bytecode::Opcode::PEEK };
-				Instruction inst2 { .operation = Bytecode::Opcode::PRINT };
-				Instruction inst3 { .operation = Bytecode::Opcode::POP };
-				bytecode->push_back(inst1);
-				bytecode->push_back(inst2);
-				bytecode->push_back(inst3);
+				// print n-elements
+				Instruction inst { 
+					.operation = Bytecode::Opcode::PRINT, 
+					.operand.type = Bytecode::WordType::INT32_T,
+					.operand.memory.asInt32 = iota(true),
+				};
+				bytecode->push_back(inst);
 			}
 			else if (token.pattern == "start")
 			{
@@ -80,6 +93,7 @@ vector<Bytecode::Instruction>* translate(vector<Token> &tokenStream)
 		case STRING_LITERAL: {
 		    vector<Instruction>* instructions = convert(token);
 			for (Instruction set: *instructions) {
+				iota();
 				bytecode->push_back(set);
 			}
 		} 
@@ -97,22 +111,22 @@ vector<Bytecode::Instruction>* translate(vector<Token> &tokenStream)
 		case ARITHMETIC_OPERATOR:
 			if (token.pattern == "+") 
 			{
-				Instruction inst { .operation = Opcode::ADD };
+				Instruction inst { .operation = Opcode::ADD};
 				bytecode->push_back(inst);
 			}
 			else if (token.pattern == "-") 
 			{
-				Instruction inst { .operation = Opcode::ADD };
+				Instruction inst { .operation = Opcode::SUB};
 				bytecode->push_back(inst);
 			}
 			else if (token.pattern == "*")
 			{
-				Instruction inst { .operation = Opcode::ADD };
+				Instruction inst { .operation = Opcode::MUL};
 				bytecode->push_back(inst);
 			}
 			else if (token.pattern == "/") 
 			{
-				Instruction inst { .operation = Opcode::ADD };
+				Instruction inst { .operation = Opcode::DIV};
 				bytecode->push_back(inst);
 			}
 			break;
@@ -124,17 +138,11 @@ vector<Bytecode::Instruction>* translate(vector<Token> &tokenStream)
 
 // performs lexing, parsing, and translation into the bytecode representation of the program
 vector<Bytecode::Instruction>* compile(string &sourceCode) {
-  cout << "\n======== Generating Tokens ========\n" << endl;
+  cout << "===== Tokenizing Input =====" << endl;
   vector<Token> tokens = lex(sourceCode);
 
-  cout << "\n======== Parsing Expressions ========\n" << endl;
+  cout << "===== Parsing Expressions =====" << endl;
   vector<Token> *stream = parser(&tokens);
-
-  cout << "\n======== Token Stream ========\n";
-  for (Token token : *stream) {
-    cout << token.pattern << " ";
-  }
-  cout << "\n\n";
 
   vector<Bytecode::Instruction>* bytecode = translate(*stream);
 

@@ -7,7 +7,7 @@ void completedToken(Token &token, vector<Token> &tokens)
 		tokens.push_back(token);
 
 		// TODO: Remove me, for debugging
-		cout << "Generated Token: { '" << token.pattern << "', '" << token.type << "' }" << endl;
+		cout << "Token: { '" << token.pattern << "', '" << token.type << "' }" << endl;
 	}
 
 	token.type = WHITE_SPACE;
