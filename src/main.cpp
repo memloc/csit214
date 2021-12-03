@@ -4,8 +4,10 @@
 #include <string>
 
 #include "../include/Compiler.h"
+#include "../include/VirtualMachine.h"
 
 using namespace std;
+using namespace VM;
 
 #define MAX_PROGRAM_SIZE 1024
 
@@ -32,6 +34,9 @@ int main(int argc, char* argv[]) {
 	cout << sourceCode << endl;
 
 	vector<Bytecode::Instruction>* bytecode = compile(sourceCode);
+
+	VM::VirtualMachine vm(bytecode);
+	vm.run();
 
 	return 0;
 }

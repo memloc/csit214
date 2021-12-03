@@ -297,7 +297,7 @@ vector<Token> *parser(vector<Token> *stream) {
         result->push_back(token);
       }
     } else {
-	  cout << "Fatal Error During Parsing";
+	  cout << "Error: Keyword Undefined." << endl;
 	  exit(1);
 	}
   }
