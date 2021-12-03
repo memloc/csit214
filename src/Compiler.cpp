@@ -9,30 +9,47 @@
 #include "Bytecode.h"
 #include "Compiler.h"
 #include "Token.h"
+#include "Lexer.h"
 
 using namespace std;
 using namespace Bytecode;
 
 // converts a token into one or more words
-vector<Word> convert(Token& token) {
-  vector<Word> statement;
-  return statement;
+Bytecode::Instruction convert(Token &token)
+{
+	Instruction instr;
+	instr.operation = Opcode::PUSH;
+	if (token.type == INTEGER_LITERAL)
+	{
+		instr.operand.memory.asInt32 = stoi(token.pattern);
+		instr.operand.type = WordType::INT32_T;
+		return instr;
+	}
+	else
+	{
+		instr.operand.memory.asPString = &token.pattern;
+		instr.operand.type = WordType::P_STRING_T;
+		return instr;
+	}
 };
 
 // Translate all of the tokens in the token stream into bytecode
-vector<Bytecode::Instruction> translate(vector<Token>& tokenStream) {
-  vector<Bytecode::Instruction> bytecode;
-  Bytecode::Instruction* instruction = new Bytecode::Instruction;
+vector<Bytecode::Instruction> translate(vector<Token> &tokenStream)
+{
+	vector<Bytecode::Instruction> bytecode;
+	Bytecode::Instruction *instruction = new Bytecode::Instruction;
 
-  for (Token token : tokenStream) {
-	switch (token.type) {
+	for (Token token : tokenStream)
+	{
+		switch (token.type)
+		{
 		case KEYWORD:
 			// TODO: clean hardcoded keyword patterns
-			if (token.pattern == "print") 
+			if (token.pattern == "print")
 				instruction->operation = Opcode::PRINT;
-			else if (token.pattern == "start") 
+			else if (token.pattern == "start")
 				instruction->operation = Opcode::NOP;
-			else if (token.pattern == "end") 
+			else if (token.pattern == "end")
 				instruction->operation = Opcode::NOP;
 			break;
 
@@ -43,8 +60,6 @@ vector<Bytecode::Instruction> translate(vector<Token>& tokenStream) {
 			//
 			//
 			//
-			
-
 
 			break;
 		case INTEGER_LITERAL:
@@ -53,7 +68,6 @@ vector<Bytecode::Instruction> translate(vector<Token>& tokenStream) {
 			// instruction->operand
 			//
 			//
-			
 
 			break;
 
@@ -70,35 +84,36 @@ vector<Bytecode::Instruction> translate(vector<Token>& tokenStream) {
 
 		default:
 			instruction->operation = Opcode::NOP;
+		}
 	}
-  }
 
-  return bytecode;
+	return bytecode;
 }
 
 // performs lexing, parsing, and translation into the bytecode representation of the program
-vector<Bytecode::Instruction>* compile(string& sourceCode) 
+vector<Bytecode::Instruction> *compile(string &sourceCode)
 {
-	cout << "\n======== Generating Tokens ========\n" << endl;
-    vector<Token> tokens = lex(sourceCode);
+	cout << "\n======== Generating Tokens ========\n"
+			 << endl;
+	vector<Token> tokens = lex(sourceCode);
 
-	cout << "\n======== Parsing Expressions ========\n" << endl;
-	vector<Token>* stream = parser(&tokens);
+	cout << "\n======== Parsing Expressions ========\n"
+			 << endl;
+	vector<Token> *stream = parser(tokens);
 
 	cout << "\n======== Token Stream ========\n";
-    for (Token token : *stream) 
+	for (Token token : *stream)
 	{
-        cout << token.pattern << " ";
-    }
-    cout << "\n\n";
+		cout << token.pattern << " ";
+	}
+	cout << "\n\n";
 
-    vector<Bytecode::Instruction>* bytecode = new vector<Bytecode::Instruction>;
+	vector<Bytecode::Instruction> *bytecode = new vector<Bytecode::Instruction>;
 	//
-	// Translate bytecode 
+	// Translate bytecode
 	//
 	//
 	//
-		 
 
-    return bytecode;
+	return bytecode;
 }
