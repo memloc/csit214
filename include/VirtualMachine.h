@@ -9,6 +9,8 @@
 #include "Bytecode.h"
 #include "Compiler.h"
 
+using namespace Bytecode;
+
 namespace VM {
 
 enum Exception {
@@ -18,33 +20,6 @@ enum Exception {
 
 using namespace std;
 
-enum class WordType : uint8_t {
-  INT32_T,
-  CHAR32_T,
-  CHAR_T,
-};
-
-/* Extra 16-bits left-over to put inside the WORD
-enum class WordFlags:uint8_t {};
-*/
-
-/*
- * @brief A fixed size unit of memory to store data (64-bits)
- * The intended interpretation of the data being the WordType.
- */
-typedef struct Word {
-  WordType type;
-  union {
-    int32_t asInt32;
-    uint32_t asUInt32;
-    struct asChar32 {
-      int8_t $ch1; // 'o'
-      int8_t $ch2; // 'o'
-      int8_t $ch3; // 'p
-      int8_t $ch4; // 's' Must null terminate '\0'
-    } asChar32;
-  } memory;
-} Word;
 
 class VirtualMachine {
 private:
@@ -71,10 +46,6 @@ private:
   void load(Bytecode::Instruction);
   // execute a single instruction
   void step();
-
-private:
-  // convert the data in an instruction into a word
-  vector<Word> convert(Bytecode::Instruction);
 };
 
 } // namespace VM

@@ -7,7 +7,6 @@
 using namespace VM;
 
 
-  
 // execute until finished 
 void VirtualMachine::run() {
   while (!bytecode->empty()) {
@@ -46,21 +45,6 @@ void VirtualMachine::load(Bytecode::Instruction instruction) {
   }
 };
 
-vector<Word> decode(Bytecode::Instruction instruction) {
-  vector<Word> words;
-
-  if (instruction.operand.type == STRING_LITERAL)
-	{
-	  // Figure out the number of characters in the instructions operand
-	  // then create enough words to represent the data.
-	}
-  else if (instruction.operand.type == INTEGER_LITERAL)
-	{
-	  // Convert the operand from a string into an integer then return it as a word
-	}
-
-  return words;
-};
 
 
 VirtualMachine::VirtualMachine(vector<Bytecode::Instruction>* bytecode) {

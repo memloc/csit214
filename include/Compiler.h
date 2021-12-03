@@ -9,20 +9,9 @@
 
 using namespace std;
 
-enum ExceptionType
-{
-    NONE,
-    UNDEFINED_BEHAVIOR,
-};
-
-struct Exception
-{
-    ExceptionType type;
-    string message;
-};
 
 // translate tokens from the token stream into instructions in bytecode
-Bytecode::Instruction* translate(Token&);
+vector<Bytecode::Instruction> translate(vector<Token>&);
 
 // performs the entire process of lexing, parsing and translation from source code into the bytecode
 vector<Bytecode::Instruction>* compile(string &);
