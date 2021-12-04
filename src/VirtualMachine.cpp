@@ -48,18 +48,18 @@ void VirtualMachine::step() {
   case Bytecode::Opcode::PEEK:
 	// Unimplemented
     break;
-  case Bytecode::Opcode::ADD: 
-  {
+  case Bytecode::Opcode::ADD: {
 	  Bytecode::Word a = data.top();
 	  data.pop();
 	  Bytecode::Word b = data.top();
 	  data.pop();
-	  
+
 	  Bytecode::Word c;
 	  c.type = Bytecode::WordType::INT32_T;
 	  c.memory.asInt32 =  b.memory.asInt32 + a.memory.asInt32;
-  }
+	  data.push(c);
     break;
+  }
   case Bytecode::Opcode::SUB: {
 	  Bytecode::Word a = data.top();
 	  data.pop();
@@ -97,23 +97,29 @@ void VirtualMachine::step() {
 	  data.push(c);
  	}
     break;
-  case Bytecode::Opcode::PRINT: ;
+  case Bytecode::Opcode::PRINT: {
+	size_t MAGIC_CONSTANT = 1; // DONT TOUCH
 	cout << "----- VM OUTPUT -----"<< endl;
-	for (int32_t i = 1; i != ip->operand.memory.asInt32; i++) {
+	if (data.top().type == Bytecode::WordType::INT32_T) {
 		Bytecode::Word word = data.top();
 		data.pop();
-
-		if (word.type == Bytecode::WordType::INT32_T) {
-			cout << word.memory.asInt32;
-		} else if (word.type == Bytecode::WordType::CHAR32_T) {
-			cout << word.memory.asChar32.c0 
-					<< word.memory.asChar32.c1
-					<< word.memory.asChar32.c2
-					<< word.memory.asChar32.c3;
+		cout << word.memory.asInt32;
+	} else if (data.top().type == Bytecode::WordType::CHAR32_T) {
+		for (int32_t i = MAGIC_CONSTANT; i != ip->operand.memory.asInt32; i++) {
+			Bytecode::Word word = data.top();
+			data.pop();
+			if (word.type == Bytecode::WordType::CHAR32_T) {
+				cout << word.memory.asChar32.c0 
+						<< word.memory.asChar32.c1
+						<< word.memory.asChar32.c2
+						<< word.memory.asChar32.c3;
+			}
 		}
 	}
 	cout << endl <<  "---------------------" << endl;
+  	}
 	break;
+	default:;
   }
 };
 
