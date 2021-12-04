@@ -26,11 +26,12 @@ vector<Bytecode::Instruction>* convert(Token &token)
 	// A Word only has 32-bits allocated to data storage, so it can only store 4 characters 
 	size_t totalChars = token.pattern.size();
 	size_t NUM_CHAR_BYTES = 4;
-	size_t numWords = (totalChars % NUM_CHAR_BYTES == 0) ? (totalChars/NUM_CHAR_BYTES) : (totalChars/NUM_CHAR_BYTES) + (totalChars/NUM_CHAR_BYTES);
+	size_t numWords = totalChars / NUM_CHAR_BYTES;
+	numWords += 2;
 
 	const size_t LAST_WORD = 1; 
 	size_t curChar = 0;
-	for (size_t curWord = numWords; curWord > LAST_WORD; curWord--) {
+	for (size_t curWord = numWords; curWord > LAST_WORD; --curWord) {
 		Instruction inst;
 		inst.operation = Opcode::PUSH;
 		inst.operand.type = WordType::CHAR32_T;

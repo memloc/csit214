@@ -106,7 +106,7 @@ void VirtualMachine::step() {
 		data.pop();
 		cout << word.memory.asInt32;
 	} else if (data.top().type == Bytecode::WordType::CHAR32_T) {
-		for (int32_t i = NUM_PRINT_OPERATIONS; i != ip->operand.memory.asInt32; i++) {
+		for (size_t i = NUM_PRINT_OPERATIONS; i != ip->operand.memory.asInt32; i++) {
 			Bytecode::Word word = data.top();
 			data.pop();
 			if (word.type == Bytecode::WordType::CHAR32_T) {
