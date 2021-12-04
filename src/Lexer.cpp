@@ -1,5 +1,5 @@
-#include "Lexer.h"
-#include "Token.h"
+#include "../include/Lexer.h"
+#include "../include/Token.h"
 
 void completedToken(Token &token, vector<Token> &tokens)
 {

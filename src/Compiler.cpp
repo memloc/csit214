@@ -28,9 +28,9 @@ vector<Bytecode::Instruction>* convert(Token &token)
 	size_t NUM_CHAR_BYTES = 4;
 	size_t numWords = (totalChars % NUM_CHAR_BYTES == 0) ? (totalChars/NUM_CHAR_BYTES) : (totalChars/NUM_CHAR_BYTES) + (totalChars/NUM_CHAR_BYTES);
 
-	const size_t CONSTANT = 1; 
+	const size_t LAST_WORD = 1; 
 	size_t curChar = 0;
-	for (size_t curWord = numWords; curWord > CONSTANT; curWord--) {
+	for (size_t curWord = numWords; curWord > LAST_WORD; curWord--) {
 		Instruction inst;
 		inst.operation = Opcode::PUSH;
 		inst.operand.type = WordType::CHAR32_T;
