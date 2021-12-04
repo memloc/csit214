@@ -6,14 +6,14 @@
 #include <string>
 #include <iostream>
 
-#include "Parser.h"
-#include "Bytecode.h"
-#include "Compiler.h"
-#include "Token.h"
-#include "Lexer.h"
+#include "../include/Parser.h"
+#include "../include/Bytecode.h"
+#include "../include/Compiler.h"
+#include "../include/Token.h"
+#include "../include/Lexer.h"
 
 // Global Iota
-int IOTA = 1;
+int IOTA = 0;
 
 using namespace std;
 using namespace Bytecode;
@@ -25,7 +25,8 @@ vector<Bytecode::Instruction>* convert(Token &token)
 
 	// A Word only has 32-bits allocated to data storage, so it can only store 4 characters 
 	size_t totalChars = token.pattern.size();
-	size_t numWords = (totalChars % 4 == 0) ? (totalChars/4) : (totalChars/4) + 1;
+	size_t NUM_CHAR_BYTES = 4;
+	size_t numWords = (totalChars % NUM_CHAR_BYTES == 0) ? (totalChars/NUM_CHAR_BYTES) : (totalChars/NUM_CHAR_BYTES) + (totalChars % NUM_CHAR_BYTES);
 
 	// 
 	size_t curChar = 0;
@@ -72,12 +73,11 @@ vector<Bytecode::Instruction>* translate(vector<Token> &tokenStream)
 			if (token.pattern == "print")
 			{
 				// print n-elements
-				Instruction inst { 
-					.operation = Bytecode::Opcode::PRINT, 
-					.operand.type = Bytecode::WordType::INT32_T,
-					.operand.memory.asInt32 = iota(true),
-				};
-				bytecode->push_back(inst);
+			  Instruction inst;
+			  inst.operation = Bytecode::Opcode::PRINT;
+			  inst.operand.type = Bytecode::WordType::INT32_T;
+			  inst.operand.memory.asInt32 = iota(true);
+			  bytecode->push_back(inst);
 			}
 			else if (token.pattern == "start")
 			{
@@ -89,11 +89,12 @@ vector<Bytecode::Instruction>* translate(vector<Token> &tokenStream)
 			}
 			break;
 		}
+		break;
 
 		case STRING_LITERAL: {
 		    vector<Instruction>* instructions = convert(token);
 			for (Instruction set: *instructions) {
-				iota();
+			  	iota();
 				bytecode->push_back(set);
 			}
 		} 
@@ -133,6 +134,7 @@ vector<Bytecode::Instruction>* translate(vector<Token> &tokenStream)
 		}
 	}
 
+	reverse(bytecode->begin(), bytecode->end());
 	return bytecode;
 }
 

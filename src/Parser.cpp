@@ -279,10 +279,19 @@ vector<Token> parseExpression(vector<Token> *stream, int &offset) {
 vector<Token> *parser(vector<Token> *stream) {
   vector<Token> *result = new vector<Token>;
 
-  if (stream->front().pattern != "start" || stream->back().pattern != "end")
+// If the start token is missing throw an error
+  if (stream->front().pattern != "start")
 	{
+    cout << "Error: Missing keyword 'start'." << endl;
 	  exit(1);
-	}
+	} 
+  
+  // If the end token is missing try to find it and report an error
+  if (stream->back().pattern != "end")
+  {
+    cout << "Error: Missing keyword 'end'." << endl;
+	  exit(1);
+  }
 
   // Define all the keywords of the language before parsing
   defineLanguageElements();
