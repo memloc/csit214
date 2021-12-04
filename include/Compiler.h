@@ -10,8 +10,12 @@
 using namespace std;
 
 
+
+// Convert 
+vector<Bytecode::Instruction>* convert(Token&);
+
 // translate tokens from the token stream into instructions in bytecode
-vector<Bytecode::Instruction> translate(vector<Token>&);
+vector<Bytecode::Instruction>* translate(vector<Token>&);
 
 // performs the entire process of lexing, parsing and translation from source code into the bytecode
 vector<Bytecode::Instruction>* compile(string &);

@@ -43,9 +43,11 @@ public:
 
 private:
   // load a single instruction
-  void load(Bytecode::Instruction);
+  void load();
   // execute a single instruction
   void step();
+
+  void loaderDebugPrint();
 };
 
 } // namespace VM

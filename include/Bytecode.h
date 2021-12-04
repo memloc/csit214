@@ -25,12 +25,10 @@ namespace Bytecode
   enum class WordType : uint8_t {
 	INT32_T,
 	CHAR32_T,
-	P_STRING_T
   };
   
-  /* Extra 16-bits left-over to put inside the WORD
-	 enum class WordFlags:uint8_t {};
-  */
+	enum class WordFlag:uint8_t {
+	};
   
   /*
    * @brief A fixed size unit of memory to store data (64-bits)
@@ -41,7 +39,12 @@ namespace Bytecode
 	union {
 	  int32_t asInt32;
 	  uint32_t asUInt32;
-	  string* asPString;
+	  struct asChar32 {
+		  int8_t c0;
+		  int8_t c1;
+		  int8_t c2;
+		  int8_t c3;
+	  } asChar32;
 	} memory;
   } Word;
   

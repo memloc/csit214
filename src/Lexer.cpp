@@ -1,4 +1,5 @@
 #include "Lexer.h"
+#include "Token.h"
 
 void completedToken(Token &token, vector<Token> &tokens)
 {
@@ -7,7 +8,7 @@ void completedToken(Token &token, vector<Token> &tokens)
 		tokens.push_back(token);
 
 		// TODO: Remove me, for debugging
-		cout << "Generated Token: { '" << token.pattern << "', '" << token.type << "' }" << endl;
+		cout << "Token: { '" << token.pattern << "', '" << token.type << "' }" << endl;
 	}
 
 	token.type = WHITE_SPACE;
@@ -69,6 +70,7 @@ vector<Token> lex(string &sourceCode)
 			}
 			break;
 
+		case '\t':
 		case ';':
 		case '\n':
 		case ' ':
@@ -81,6 +83,7 @@ vector<Token> lex(string &sourceCode)
 				completedToken(curToken, tokens); //token{WHITE_SPACE, ""}
 			}
 			break;
+
 		case '"':
 			if (curToken.type != STRING_LITERAL)
 			{
@@ -94,6 +97,11 @@ vector<Token> lex(string &sourceCode)
 				completedToken(curToken, tokens);//token{WHITE_SPACE, ""}
 			}
 			break;
+
+		// Avoid reading unwanted characters
+		case '\0':
+		case  EOF:
+			return tokens;
 
 		case '+':
 		case '-':
@@ -120,10 +128,11 @@ vector<Token> lex(string &sourceCode)
 			}
 			else
 			{
-				curToken.pattern += c;
-				curToken.type = KEYWORD;
+				if (c >= 'a' && c <= 'z' || c > 'A' && c <= 'Z') {
+					curToken.pattern += c;
+					curToken.type = KEYWORD;
+				}
 			}
-
 			break;
 		}
 	}
