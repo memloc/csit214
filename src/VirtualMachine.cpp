@@ -14,10 +14,12 @@ using namespace VM;
 
 // execute until finished 
 void VirtualMachine::run() {
+	cout << "===== STACK TOP =====" << endl;
   	while (!bytecode->empty() && !halt) {
 		load();
 		step();
   	}
+	cout << "===== STACK BOT =====" << endl;
 }
 
 void VirtualMachine::step() {
@@ -25,7 +27,7 @@ void VirtualMachine::step() {
 	if (!bytecode->empty()) {
 		ip = &bytecode->back();
 	} else {
-		exit(1);
+		return;
 	}
 
   // Execute the instruciton at the instruction pointer
