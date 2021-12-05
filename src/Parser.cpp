@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 
-#include "Lexer.h"
+#include "../include/Lexer.h"
 
 // Hashmap for quickly looking up language keywords
 std::map<string, TokenType> LANG_KEYWORDS;

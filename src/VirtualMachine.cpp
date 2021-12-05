@@ -1,13 +1,14 @@
-#include "Bytecode.h"
-#include "Compiler.h"
-#include "Token.h"
-#include "VirtualMachine.h"
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <ios>
 #include <iostream>
 #include <string>
+
+#include "../include/Bytecode.h"
+#include "../include/Compiler.h"
+#include "../include/Token.h"
+#include "../include/VirtualMachine.h"
 
 using namespace VM;
 
@@ -98,14 +99,14 @@ void VirtualMachine::step() {
  	}
     break;
   case Bytecode::Opcode::PRINT: {
-	size_t MAGIC_CONSTANT = 1; // DONT TOUCH
+	size_t NUM_PRINT_OPERATIONS= 1; 
 	cout << "----- VM OUTPUT -----"<< endl;
 	if (data.top().type == Bytecode::WordType::INT32_T) {
 		Bytecode::Word word = data.top();
 		data.pop();
 		cout << word.memory.asInt32;
 	} else if (data.top().type == Bytecode::WordType::CHAR32_T) {
-		for (int32_t i = MAGIC_CONSTANT; i != ip->operand.memory.asInt32; i++) {
+		for (size_t i = NUM_PRINT_OPERATIONS; i != ip->operand.memory.asInt32; i++) {
 			Bytecode::Word word = data.top();
 			data.pop();
 			if (word.type == Bytecode::WordType::CHAR32_T) {
