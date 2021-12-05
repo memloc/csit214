@@ -27,9 +27,9 @@ vector<Bytecode::Instruction>* convert(Token &token)
 	size_t totalChars = token.pattern.size();
 	size_t NUM_CHAR_BYTES = 4;
 	size_t numWords = totalChars / NUM_CHAR_BYTES;
-	numWords += 2;
+	numWords+=2;
 
-	const size_t LAST_WORD = 1; 
+	const size_t LAST_WORD = 0; 
 	size_t curChar = 0;
 	for (size_t curWord = numWords; curWord > LAST_WORD; --curWord) {
 		Instruction inst;
@@ -37,10 +37,10 @@ vector<Bytecode::Instruction>* convert(Token &token)
 		inst.operand.type = WordType::CHAR32_T;
 
 		// Initialize each character of the instruction, set it to null terminator if it is outside of the string
-		inst.operand.memory.asChar32.c0 = (curChar == totalChars) ? '\0' : token.pattern.at(curChar++);
-		inst.operand.memory.asChar32.c1 = (curChar == totalChars) ? '\0' : token.pattern.at(curChar++);
-		inst.operand.memory.asChar32.c2 = (curChar == totalChars) ? '\0' : token.pattern.at(curChar++);
-		inst.operand.memory.asChar32.c3 = (curChar == totalChars) ? '\0' : token.pattern.at(curChar++);
+		inst.operand.memory.asChar32.c0 = (curChar == totalChars) ? ' ' : token.pattern.at(curChar++);
+		inst.operand.memory.asChar32.c1 = (curChar == totalChars) ? ' ' : token.pattern.at(curChar++);
+		inst.operand.memory.asChar32.c2 = (curChar == totalChars) ? ' ' : token.pattern.at(curChar++);
+		inst.operand.memory.asChar32.c3 = (curChar == totalChars) ? ' ' : token.pattern.at(curChar++);
 
 		data->push_back(inst);
 	}

@@ -16,21 +16,16 @@ using namespace VM;
 // execute until finished 
 void VirtualMachine::run() {
 	cout << "===== STACK TOP =====" << endl;
-  	while (!bytecode->empty() && !halt) {
-		load();
-		step();
+  	while (!bytecode->empty()) {
+	  if (halt) exit(1);
+
+	  load();
+	  step();
   	}
 	cout << "===== STACK BOT =====" << endl;
 }
 
 void VirtualMachine::step() {
-	// Load the instruction pointer	
-	if (!bytecode->empty()) {
-		ip = &bytecode->back();
-	} else {
-		return;
-	}
-
   // Execute the instruciton at the instruction pointer
   switch (ip->operation) {
   case Bytecode::Opcode::NOP:
@@ -69,7 +64,7 @@ void VirtualMachine::step() {
 	  
 	  Bytecode::Word c;
 	  c.type = Bytecode::WordType::INT32_T;
-	  c.memory.asInt32 = a.memory.asInt32 - a.memory.asInt32;
+	  c.memory.asInt32 = b.memory.asInt32 - a.memory.asInt32;
 	  data.push(c);
   }
     break;
@@ -81,8 +76,12 @@ void VirtualMachine::step() {
 	  
 	  Bytecode::Word c;
 	  c.type = Bytecode::WordType::INT32_T;
-	  c.memory.asInt32 = a.memory.asInt32 - b.memory.asInt32;
-	  c.memory.asInt32 = b.memory.asInt32 / a.memory.asInt32;
+	  if (a.memory.asInt32 == 0) {
+		cout << "Exception Caught: Attempt to divide by zero" << endl;
+		halt = true;
+	  } else {
+		c.memory.asInt32 = b.memory.asInt32 / a.memory.asInt32;
+	  }
 	  data.push(c);
   }
     break;
@@ -177,7 +176,7 @@ void VirtualMachine::loaderDebugPrint() {
             cout << "MUL" << endl;
             break;
         case Bytecode::Opcode::PRINT:
-            cout << "PRINT\t(x" << ip->operand.memory.asInt32 << ")" << endl;
+            cout << "PRINT\tx" << ip->operand.memory.asInt32 << "" << endl;
           break;
         }
 }
