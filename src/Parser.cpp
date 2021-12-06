@@ -7,7 +7,6 @@
 // Hashmap for quickly looking up language keywords
 std::map<string, TokenType> LANG_KEYWORDS;
 
-// Define the keywords of the language
 void defineLanguageElements() {
   string langKeywords[] = {"print", "start", "end"};
 
@@ -22,7 +21,6 @@ bool keywordDefined(Token &token) {
   return (LANG_KEYWORDS.find(token.pattern)->second == KEYWORD);
 }
 
-//(( (1+2)*3-4+(2*(3-5))))
 vector<Token> discardParen(vector<Token> expression) {
   vector<Token> newExpression;
   int depth = 0;
